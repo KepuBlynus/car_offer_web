@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Car Offer Tool</title>
+    <title>PDF Upload</title>
 </head>
 <body>
-    <h1>Upload Offer + Visualization PDF</h1>
+    <h2>Upload Offer and Visualization PDFs</h2>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        Offer PDF: <input type="file" name="offer"><br><br>
-        Visualization PDF: <input type="file" name="visualization"><br><br>
-        <button type="submit">Generate Final PDF</button>
+        <label>Offer PDF:</label>
+        <input type="file" name="offer" required><br><br>
+
+        <label>Visualization PDF:</label>
+        <input type="file" name="visualization" required><br><br>
+
+        <label>
+            <input type="checkbox" name="insert_images">
+            Insert Option Code Images
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="insert_banner">
+            Include Banner Image
+        </label><br><br>
+
+        <input type="submit" value="Generate Final Offer">
     </form>
 </body>
 </html>
+
