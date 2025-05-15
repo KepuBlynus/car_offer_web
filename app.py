@@ -8,17 +8,18 @@ UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'output'
 IMAGE_FOLDER = 'static/images'
 
+# Option codes mapped to image filenames
 code_to_image = {
-    "E4S": "e4s",
-    "A4M": "a4m",
-    "F49": "f49",
-    "F84": "f84",
-    "JB6": "jb6",
-    "JB7": "jb7",
-    "LA1": "la1",
-    "LG7": "lg7",
-    "P3X": "p3x",
-    "QA8": "qa8",
+    # "E4S": "e4s.jpeg",  ← REMOVE this line
+    "A4M": "a4m.jpeg",
+    "F49": "f49.jpeg",
+    "F84": "f84.jpeg",
+    "JB6": "jb6.jpeg",
+    "JB7": "jb7.jpeg",
+    "LA1": "la1.jpeg",
+    "LG7": "lg7.jpeg",
+    "P3X": "p3x.jpeg",
+    "QA8": "qa8.jpeg",
 }
 
 @app.route('/')
@@ -45,7 +46,6 @@ def upload():
 
     klientas_name = ""
     model_name = "MERCEDES-BENZ SPRINTER SELECT 319CDI TOURER"
-
     banner_path = os.path.join(IMAGE_FOLDER, "banner.jpg")
     banner_inserted = False
 
@@ -55,11 +55,18 @@ def upload():
             start = text.find("Klientas:") + len("Klientas:")
             klientas_name = text[start:].split("\n")[0].strip()
 
+        # Insert option images
         if insert_images:
             for code, image_file in code_to_image.items():
                 instances = page.search_for(code)
                 for inst in instances:
                     image_path = os.path.join(IMAGE_FOLDER, image_file)
+
+                    if not os.path.exists(image_path):
+                        print(f"⚠️ Image not found for code {code}: {image_path}")
+                        continue  # Skip if file is missing
+
+                    print(f"Inserting image for {code} from: {image_path}")
 
                     img_width = 120
                     img_height = 65
@@ -69,6 +76,7 @@ def upload():
 
                     page.insert_image(img_rect, filename=image_path, keep_proportion=True, overlay=True)
 
+                    # Add image decoration and connector lines
                     page.draw_rect(img_rect, color=(0, 1, 1), width=1.5, fill_opacity=0.05)
                     shadow_rect = fitz.Rect(img_rect.x0 + 2, img_rect.y0 + 2, img_rect.x1 + 2, img_rect.y1 + 2)
                     page.draw_rect(shadow_rect, color=(0.4, 0.4, 0.4), width=0.5, fill_opacity=0.1)
@@ -83,6 +91,7 @@ def upload():
                     page.draw_line(corner_point, vertical_to_image, color=(0, 0.7, 1), width=1.2)
                     page.draw_line(fitz.Point(img_rect.x0, img_rect.y0 + img_height / 2), vertical_to_image, color=(0, 0.7, 1), width=1.2)
 
+        # Insert banner image
         if insert_banner and not banner_inserted:
             label = "Techniniai duomenys:"
             found = page.search_for(label)
@@ -93,9 +102,11 @@ def upload():
                     banner_inserted = True
                     break
 
+    # Save modified offer PDF
     temp_offer_path = os.path.join(OUTPUT_FOLDER, 'temp_offer.pdf')
     doc.save(temp_offer_path)
 
+    # Load and reorder visualization PDF
     vis_reader = PdfReader(vis_path)
     pages = list(vis_reader.pages)
 
@@ -116,6 +127,7 @@ def upload():
             writer.add_page(p)
         writer.write(f)
 
+    # Merge offer and visualization PDFs
     merger = PdfMerger()
     merger.append(temp_offer_path)
     merger.append(reordered_vis_path)
