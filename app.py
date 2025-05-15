@@ -9,16 +9,16 @@ OUTPUT_FOLDER = 'output'
 IMAGE_FOLDER = 'static/images'
 
 code_to_image = {
-    "E4S": "e4s.jpeg",
-    "A4M": "a4m.jpeg",
-    "F49": "f49.jpeg",
-    "F84": "f84.jpeg",
-    "JB6": "jb6.jpeg",
-    "JB7": "jb7.jpeg",
-    "LA1": "la1.jpeg",
-    "LG7": "lg7.jpeg",
-    "P3X": "p3x.jpeg",
-    "QA8": "qa8.jpeg",
+    "E4S": "e4s",
+    "A4M": "a4m",
+    "F49": "f49",
+    "F84": "f84",
+    "JB6": "jb6",
+    "JB7": "jb7",
+    "LA1": "la1",
+    "LG7": "lg7",
+    "P3X": "p3x",
+    "QA8": "qa8",
 }
 
 @app.route('/')
