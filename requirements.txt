@@ -14,3 +14,4 @@ pywebview==5.4
 pywin32-ctypes==0.2.3
 setuptools==80.3.1
 typing_extensions==4.13.2
+gunicorn
